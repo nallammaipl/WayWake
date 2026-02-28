@@ -4,16 +4,24 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, {
-  tls: true,
-  tlsAllowInvalidCertificates: true,
-})
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log('MongoDB error:', err));
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      ssl: true,
+    });
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.log('MongoDB error:', err.message);
+    setTimeout(connectDB, 5000);
+  }
+};
+
+connectDB();
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/alarms', require('./routes/alarms'));
 
