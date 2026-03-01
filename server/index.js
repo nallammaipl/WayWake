@@ -25,5 +25,18 @@ connectDB();
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/alarms', require('./routes/alarms'));
 
+// Health check endpoint
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+
+  // Keep Render awake - ping every 14 minutes
+  setInterval(() => {
+    const https = require('https');
+    https.get('https://travel-alarm-api.onrender.com/api/health', (res) => {
+      console.log('Keep alive ping:', res.statusCode);
+    }).on('error', () => {});
+  }, 14 * 60 * 1000);
+});
