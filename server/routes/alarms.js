@@ -3,7 +3,6 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Alarm = require('../models/Alarm');
 
-// Get all alarms
 router.get('/', auth, async (req, res) => {
   try {
     const alarms = await Alarm.find({ user: req.user.id });
@@ -13,7 +12,6 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Create alarm
 router.post('/', auth, async (req, res) => {
   try {
     const alarm = new Alarm({ ...req.body, user: req.user.id });
@@ -24,7 +22,6 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// Update alarm
 router.put('/:id', auth, async (req, res) => {
   try {
     const alarm = await Alarm.findOneAndUpdate(
@@ -38,7 +35,6 @@ router.put('/:id', auth, async (req, res) => {
   }
 });
 
-// Delete alarm
 router.delete('/:id', auth, async (req, res) => {
   try {
     await Alarm.findOneAndDelete({ _id: req.params.id, user: req.user.id });
