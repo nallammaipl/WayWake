@@ -33,7 +33,7 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   setInterval(() => {
     const https = require('https');
-    https.get('https://journeybell.onrender.com/api/health', (res) => {
+    https.get('https://waywake.onrender.com/api/health', (res) => {
       console.log('Keep alive ping:', res.statusCode);
     }).on('error', () => {});
   }, 14 * 60 * 1000);
